@@ -27,7 +27,7 @@ def train_model(X_train, Y_train_onehot, X_val, Y_val_onehot, w_len, dw, epochs,
     }
     lossWeights = {"embedding": 0.5, "classification": 0.5}
 
-    mdl.compile(optimizer='adam', loss=losses, loss_weights=lossWeights, metrics=[CategoricalAccuracy())
+    mdl.compile(optimizer='adam', loss=losses, loss_weights=lossWeights, metrics=[CategoricalAccuracy()])
 
         
     checkpoint_ = ModelCheckpoint(model_path, verbose=1, monitor='val_loss',save_best_only=True, mode='min')  
@@ -45,8 +45,8 @@ def train_model(X_train, Y_train_onehot, X_val, Y_val_onehot, w_len, dw, epochs,
         plt.xlabel('Epochs')
 
         plt.subplot(1,2,2)
-        plt.plot(training_history.history['categorical_accuracy'], 'b', label='Training Loss')
-        plt.plot(training_history.history['val_categorical_accuracy'], 'r', label='Test Loss')
+        plt.plot(training_history.history['classification_categorical_accuracy'], 'b', label='Training Loss')
+        plt.plot(training_history.history['val_classification_categorical_accuracy'], 'r', label='Test Loss')
         plt.legend(loc='upper left')
         plt.title('Categorical Accuracy')
         plt.xlabel('Epochs')
