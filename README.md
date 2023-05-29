@@ -27,22 +27,32 @@ We provide the codes for Raman spectrum processing along with RamanNet model and
 
 You can use RamanNet on your own Raman spectrum dataset.
 
-1. Collect the Raman spectrum, label them and split them into folds. Our model is a general one and we don't have any particular restrictions on the type of spectra.
+1. Collect the Raman spectrum, label them and split them into folds. Our model is designed to be a general one and we don't have any particular restrictions on the type of spectra.
 
-2. Compute the overlapping segments of the spectrum using our provided ***segment_spectrum_batch*** function. This function takes an array of the Raman spectra, and two (optional) parameters w (length of window. Defaults to 50) and dw (step size. Defaults to 25)
+2. Compute the overlapping segments of the spectrum using our provided ***segment_spectrum_batch*** function. This function takes an array of the Raman spectra, and two (optional) parameters w (length of window. Defaults to 50) and dw (step size. Defaults to 25). 
 
 ```
 from codes.data_processing import segment_spectrum_batch
 
 windowed_spectra = segment_spectrum_batch(input_raman_spectra_array, w = 50, dw = 25)
 ```
+
 3. Do the same for both training and validation spectra. Also convert the labels to one-hot-encoding.
 
-4. Create an instance of ***RamanNet*** model and train it using the ***train_model*** function.
+4. Create an instance of ***RamanNet*** model and train it using like standard keras models.
+
+```
+from codes.RamanNet_model import RamanNet
+
+mdl = RamanNet(w_len, n_windows, n_classes)
+```
+
+5. Alternatively, you may skip all the previous steps and use our `train_model` function, which combines all these steps. All you need is to provide the training and validation of raman spectrum arrays and one-hot encoding of labels, window length and step size, number of epochs and path to save the model. This function will convert the spectrum to windowed spectrums, create an instance of the model, the model will be trained and saved in the model_path
+
 ```
 from codes.train_model import train_model
 
-trained_model = train_model(X_train, Y_train_onehot, X_val, Y_val_onehot, w_len, dw, epochs, model_path)
+trained_model, training_history = train_model(X_train, Y_train_onehot, X_val, Y_val_onehot, w_len, dw, epochs, model_path)
 ```
 
 5. Validate on your test data or deploy.
