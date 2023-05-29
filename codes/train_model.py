@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow_addons as tfa
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau 
+from keras.metrics import CategoricalAccuracy
 
 
 def train_model(X_train, Y_train_onehot, X_val, Y_val_onehot, w_len, dw, epochs, model_path, plot=True):
@@ -26,8 +27,7 @@ def train_model(X_train, Y_train_onehot, X_val, Y_val_onehot, w_len, dw, epochs,
     }
     lossWeights = {"embedding": 0.5, "classification": 0.5}
 
-
-    mdl.compile(optimizer='adam', loss=losses, loss_weights=lossWeights)
+    mdl.compile(optimizer='adam', loss=losses, loss_weights=lossWeights, metrics=[CategoricalAccuracy())
 
         
     checkpoint_ = ModelCheckpoint(model_path, verbose=1, monitor='val_loss',save_best_only=True, mode='min')  
